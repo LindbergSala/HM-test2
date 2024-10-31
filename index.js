@@ -25,6 +25,10 @@ const hangmanParts = [
 // Dölj alla delar av gubben i början
 hangmanParts.forEach(part => part.style.visibility = "hidden");
 
+// Hämta "Play Again"-knappen och dölj den i början
+const playAgainButton = document.querySelector("button[onclick='restartGame()']");
+playAgainButton.style.display = "none";
+
 // Meddelanden för olika händelser
 const succesMessages = ["Good choice!", "Better late than never!", "You're on a roll!"];
 const failureMessages = ["Don't give up! Try again!", "Close! Try again!"];
@@ -40,14 +44,22 @@ function startGame() {
     faultCounter = 0;
     gameOver = false;
 
+    // Dölj alla delar av gubben och "Play Again"-knappen
     hangmanParts.forEach(part => part.style.visibility = "hidden");
+    playAgainButton.style.display = "none";
+
     wordDisplay.innerText = wordState.join(" ");
     messageDiv.innerText = "New game! Guess the word.";
     guessedLetterDisplay.innerText = "Guessed letters:";
     letterInput.value = "";
 }
 
-// Funktion som körs när användaren gissar en bokstav
+// Funktion som visar "Play Again"-knappen när spelet är över
+function promptRestart() {
+    playAgainButton.style.display = "inline";
+}
+
+// Funktion för att gissa en bokstav
 function guessLetter() {
     if (gameOver) return;
 
@@ -71,6 +83,7 @@ function guessLetter() {
             if (!wordState.includes("_")) { // Kolla om alla bokstäver är gissade
                 messageDiv.innerText = victoryMessages[Math.floor(Math.random() * victoryMessages.length)] + secretWord;
                 gameOver = true;
+                promptRestart(); // Fråga om de vill spela igen
             }
         } else {
             messageDiv.innerText = failureMessages[Math.floor(Math.random() * failureMessages.length)];
@@ -82,13 +95,13 @@ function guessLetter() {
             if (faultCounter === hangmanParts.length) {
                 messageDiv.innerText = `${losingMessage} The word was: ${secretWord}`;
                 gameOver = true;
+                promptRestart(); // Fråga om de vill spela igen
             }
         }
     } else {
         messageDiv.innerText = inputPromptMessages[Math.floor(Math.random() * inputPromptMessages.length)];
     }
 }
-
 
 // Koppla knapparna till funktioner
 document.querySelector("button[onclick='guessLetter()']").addEventListener("click", guessLetter);
