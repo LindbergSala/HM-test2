@@ -80,7 +80,7 @@ function guessLetter() {
                 hangmanParts[faultCounter - 1].style.visibility = "visible";
             }
             if (faultCounter === hangmanParts.length) {
-                messageDiv.innerText = losingMessage;
+                messageDiv.innerText = `${losingMessage} The word was: ${secretWord}`;
                 gameOver = true;
             }
         }
@@ -88,6 +88,7 @@ function guessLetter() {
         messageDiv.innerText = inputPromptMessages[Math.floor(Math.random() * inputPromptMessages.length)];
     }
 }
+
 
 // Koppla knapparna till funktioner
 document.querySelector("button[onclick='guessLetter()']").addEventListener("click", guessLetter);
